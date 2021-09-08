@@ -5,11 +5,11 @@ from tiles import Tile, StaticTile, Crate, AnimatedTile, Flag, Trees
 from enemy import Enemy, Enemy1, Enemy2
 from decorations import Lava
 from player import Player
-from particles import ParticleEffect
+from particles import ParticleEffect, Death, Death2
 from game_data import levels
 
 class Level:
-	def __init__(self, current_level, surface, create_overworld):
+	def __init__(self, current_level, surface, create_overworld, change_coins, change_health):
 		self.display_surface = surface
 		self.world_shift = 0
 		self.current_x = None
@@ -22,10 +22,14 @@ class Level:
 		player_layout = import_csv_layout(level_data['player'])
 		self.player = pygame.sprite.GroupSingle()
 		self.goal = pygame.sprite.GroupSingle()
-		self.player_setup(player_layout)
+		self.player_setup(player_layout, change_health)
+
+		self.change_coins = change_coins
 
 		self.dust_sprite = pygame.sprite.GroupSingle()
 		self.player_on_ground = False
+
+		self.death_sprites = pygame.sprite.Group()
 
 		terrain_layout = import_csv_layout(level_data['terrain'])
 		self.terrain_sprites = self.create_tile_group(terrain_layout,'terrain')
@@ -129,13 +133,13 @@ class Level:
 		jump_particle_sprite = ParticleEffect(pos,'jump')
 		self.dust_sprite.add(jump_particle_sprite)		
 
-	def player_setup(self, layout):
+	def player_setup(self, layout, change_health):
 		for row_index, row in enumerate(layout):
 			for col_index,val in enumerate(row):
 				x = col_index * tile_size
 				y = row_index * tile_size
 				if val == '0':
-					sprite = Player((x,y), self.display_surface, self.create_jump_particles)
+					sprite = Player((x,y), self.display_surface, self.create_jump_particles, change_health)
 					self.player.add(sprite)
 				if val == '1':
 					skull_surface = pygame.image.load('assets/characters/skull.png').convert_alpha()
@@ -231,10 +235,64 @@ class Level:
 	def check_death(self):
 		if self.player.sprite.rect.top > screen_height:
 			self.create_overworld(self.current_level, 0)
-
+			
 	def check_win(self):
 		if pygame.sprite.spritecollide(self.player.sprite, self.goal, False):
 			self.create_overworld(self.current_level, self.new_max_level)			
+
+	def check_coin_collisions(self):
+		collided_coins = pygame.sprite.spritecollide(self.player.sprite, self.coin_sprites, True)
+		if collided_coins:
+			for coin in collided_coins:
+				self.change_coins(1)
+
+	def check_enemy_collisions(self):
+		enemy_collisions = pygame.sprite.spritecollide(self.player.sprite, self.enemy_sprites, False)
+
+		if enemy_collisions:
+			for enemy in enemy_collisions:
+				enemy_center = enemy.rect.centery
+				enemy_top = enemy.rect.top
+				player_bottom = self.player.sprite.rect.bottom
+				if enemy_top < player_bottom < enemy_center and self.player.sprite.direction.y >= 0:
+					self.player.sprite.direction.y = -15
+					death_sprite = Death2(enemy.rect.midbottom, 'death1')
+					self.death_sprites.add(death_sprite)					
+					enemy.kill()
+				else:
+					self.player.sprite.get_damage()
+
+	def check_enemy1_collisions(self):
+		enemy1_collisions = pygame.sprite.spritecollide(self.player.sprite, self.enemy1_sprites, False)
+
+		if enemy1_collisions:
+			for enemy1 in enemy1_collisions:
+				enemy1_center = enemy1.rect.centery
+				enemy1_top = enemy1.rect.top
+				player_bottom = self.player.sprite.rect.bottom
+				if enemy1_top < player_bottom < enemy1_center and self.player.sprite.direction.y >= 0:
+					self.player.sprite.direction.y = -15
+					death_sprite = Death2(enemy1.rect.midbottom, 'death2')
+					self.death_sprites.add(death_sprite)
+					enemy1.kill()
+				else:
+					self.player.sprite.get_damage()
+
+	def check_enemy2_collisions(self):
+		enemy2_collisions = pygame.sprite.spritecollide(self.player.sprite, self.enemy2_sprites, False)
+
+		if enemy2_collisions:
+			for enemy2 in enemy2_collisions:
+				enemy2_center = enemy2.rect.centery
+				enemy2_top = enemy2.rect.top
+				player_bottom = self.player.sprite.rect.bottom
+				if enemy2_top < player_bottom < enemy2_center and self.player.sprite.direction.y >= 0:
+					self.player.sprite.direction.y = -15
+					death_sprite = Death(enemy2.rect.midbottom, 'death3')
+					self.death_sprites.add(death_sprite)
+					enemy2.kill()
+				else:
+					self.player.sprite.get_damage()
 
 	def run(self):
 		self.crate_sprites.update(self.world_shift)
@@ -274,6 +332,8 @@ class Level:
 		self.enemy_collision_reverse()
 		self.enemy_collision_reverse1()
 		self.enemy_collision_reverse2()
+		self.death_sprites.update(self.world_shift)
+		self.death_sprites.draw(self.display_surface)
 
 		self.dust_sprite.update(self.world_shift)
 		self.dust_sprite.draw(self.display_surface)
@@ -292,6 +352,11 @@ class Level:
 
 		self.check_death()
 		self.check_win()
+
+		self.check_coin_collisions()
+		self.check_enemy_collisions()
+		self.check_enemy1_collisions()
+		self.check_enemy2_collisions()
 
 		self.lava.draw(self.display_surface, self.world_shift)
 
