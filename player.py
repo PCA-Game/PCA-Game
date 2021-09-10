@@ -146,7 +146,7 @@ class Player(pygame.sprite.Sprite):
 
 	def get_damage(self):
 		if not self.invicible: 
-			self.change_health(-1)
+			self.change_health(-5)
 			self.invicible = True
 			self.hurt_time = pygame.time.get_ticks()
 
