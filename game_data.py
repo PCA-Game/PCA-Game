@@ -41,14 +41,42 @@ level_1 = {
 	}
 
 level_2 = {
-	'terrain': 'assets/levels/level_data/2/level2.csv',
+	'terrain': 'assets/levels/level_data/2/level2_terrain.csv',
+	'player': 'assets/levels/level_data/2/level2_player.csv',
+	'crates': 'assets/levels/level_data/2/level2_crate.csv',
+	'trees': 'assets/levels/level_data/2/level2_trees.csv',
+	'trees1': 'assets/levels/level_data/2/level2_trees1.csv',
+	'trees2': 'assets/levels/level_data/2/level2_trees2.csv',
+	'trees3': 'assets/levels/level_data/2/level2_trees3.csv',
+	'grass': 'assets/levels/level_data/2/level2_grass.csv',
+	'grass1': 'assets/levels/level_data/2/level2_grass1.csv',
+	'flag': 'assets/levels/level_data/2/level2_flag.csv',
+	'enemies': 'assets/levels/level_data/2/level2_enemies.csv',
+	'enemies1': 'assets/levels/level_data/2/level2_enemies1.csv',
+	'enemies2': 'assets/levels/level_data/2/level2_enemies2.csv',
+	'constraints': 'assets/levels/level_data/2/level2_constraints.csv',
+	'coins': 'assets/levels/level_data/2/level2_coin.csv',
 	'node_pos': (490,560),
 	'unlock': 3,
 	'node_graphics': 'assets/levels/overworld/2'
 	}
 
 level_3 = {
-	'terrain': 'assets/levels/level_data/3/level3.csv',
+	'terrain': 'assets/levels/level_data/3/level3_terrain.csv',
+	'player': 'assets/levels/level_data/3/level3_player.csv',
+	'crates': 'assets/levels/level_data/3/level3_crate.csv',
+	'trees': 'assets/levels/level_data/3/level3_trees.csv',
+	'trees1': 'assets/levels/level_data/3/level3_trees1.csv',
+	'trees2': 'assets/levels/level_data/3/level3_trees2.csv',
+	'trees3': 'assets/levels/level_data/3/level3_trees3.csv',
+	'grass': 'assets/levels/level_data/3/level3_grass.csv',
+	'grass1': 'assets/levels/level_data/3/level3_grass1.csv',
+	'flag': 'assets/levels/level_data/3/level3_flag.csv',
+	'enemies': 'assets/levels/level_data/3/level3_enemies.csv',
+	'enemies1': 'assets/levels/level_data/3/level3_enemies1.csv',
+	'enemies2': 'assets/levels/level_data/3/level3_enemies2.csv',
+	'constraints': 'assets/levels/level_data/3/level3_constraints.csv',
+	'coins': 'assets/levels/level_data/3/level3_coin.csv',
 	'node_pos': (620,300),
 	'unlock': 4,
 	'node_graphics': 'assets/levels/overworld/3'
