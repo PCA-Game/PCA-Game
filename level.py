@@ -2,7 +2,7 @@ import pygame
 from support import import_csv_layout, import_cut_graphics
 from settings import tile_size, screen_height, screen_width
 from tiles import Tile, StaticTile, Crate, AnimatedTile, Flag, Trees
-from enemy import Enemy, Enemy1, Enemy2
+from enemy import Enemy, Enemy1, Enemy2, Enemy3
 from decorations import Lava
 from player import Player
 from particles import ParticleEffect, Death, Death2
@@ -60,6 +60,8 @@ class Level:
 		self.enemy1_sprites = self.create_tile_group(enemy1_layout, 'enemies1')
 		enemy2_layout = import_csv_layout(level_data['enemies2'])
 		self.enemy2_sprites = self.create_tile_group(enemy2_layout, 'enemies2')
+		enemy3_layout = import_csv_layout(level_data['enemies3'])
+		self.enemy3_sprites = self.create_tile_group(enemy3_layout, 'enemies3')		
 
 		crate_layout = import_csv_layout(level_data['crates'])
 		self.crate_sprites = self.create_tile_group(crate_layout,'crates')
@@ -117,6 +119,8 @@ class Level:
 						sprite = Enemy1(tile_size, x, y)
 					if type == 'enemies2':
 						sprite = Enemy2(tile_size, x, y)
+					if type == 'enemies3':
+						sprite = Enemy3(tile_size, x, y)
 
 					if type == 'constraints':
 						sprite = Tile(tile_size, x, y)					
@@ -159,7 +163,12 @@ class Level:
 	def enemy_collision_reverse2(self):
 		for enemy in self.enemy2_sprites.sprites():
 			if pygame.sprite.spritecollide(enemy, self.constraint_sprites, False):
-				enemy.reverse()											
+				enemy.reverse()
+
+	def enemy_collision_reverse3(self):
+		for enemy in self.enemy3_sprites.sprites():
+			if pygame.sprite.spritecollide(enemy, self.constraint_sprites, False):
+				enemy.reverse()												
 
 	def horizontal_movement_collision(self):
 		player = self.player.sprite
@@ -294,6 +303,22 @@ class Level:
 				else:
 					self.player.sprite.get_damage()
 
+	def check_enemy3_collisions(self):
+		enemy3_collisions = pygame.sprite.spritecollide(self.player.sprite, self.enemy3_sprites, False)
+
+		if enemy3_collisions:
+			for enemy3 in enemy3_collisions:
+				enemy3_center = enemy3.rect.centery
+				enemy3_top = enemy3.rect.top
+				player_bottom = self.player.sprite.rect.bottom
+				if enemy3_top < player_bottom < enemy3_center and self.player.sprite.direction.y >= 0:
+					self.player.sprite.direction.y = -15
+					death_sprite = Death2(enemy3.rect.midbottom, 'death4')
+					self.death_sprites.add(death_sprite)
+					enemy3.kill()
+				else:
+					self.player.sprite.get_damage()
+
 	def run(self):
 		self.crate_sprites.update(self.world_shift)
 		self.crate_sprites.draw(self.display_surface)
@@ -327,11 +352,14 @@ class Level:
 		self.enemy1_sprites.draw(self.display_surface)
 		self.enemy2_sprites.update(self.world_shift)
 		self.enemy2_sprites.draw(self.display_surface)
+		self.enemy3_sprites.update(self.world_shift)
+		self.enemy3_sprites.draw(self.display_surface)
 
 		self.constraint_sprites.update(self.world_shift)
 		self.enemy_collision_reverse()
 		self.enemy_collision_reverse1()
 		self.enemy_collision_reverse2()
+		self.enemy_collision_reverse3()
 		self.death_sprites.update(self.world_shift)
 		self.death_sprites.draw(self.display_surface)
 
@@ -357,6 +385,7 @@ class Level:
 		self.check_enemy_collisions()
 		self.check_enemy1_collisions()
 		self.check_enemy2_collisions()
+		self.check_enemy3_collisions()
 
 		self.lava.draw(self.display_surface, self.world_shift)
 
