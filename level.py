@@ -2,7 +2,7 @@ import pygame
 from support import import_csv_layout, import_cut_graphics
 from settings import tile_size, screen_height, screen_width
 from tiles import Tile, StaticTile, AnimatedTile, Flag, Trees
-from enemy import Enemy, Enemy1, Enemy2, Enemy3, Enemy4
+from enemy import Enemy, Enemy1, Enemy2, Enemy3, Enemy4, Boss1
 from decorations import Lava
 from player import Player
 from particles import ParticleEffect, Death, Death2
@@ -64,6 +64,8 @@ class Level:
 		self.enemy3_sprites = self.create_tile_group(enemy3_layout, 'enemies3')
 		enemy4_layout = import_csv_layout(level_data['enemies4'])
 		self.enemy4_sprites = self.create_tile_group(enemy4_layout, 'enemies4')
+		boss1_layout = import_csv_layout(level_data['boss1'])
+		self.boss1_sprites = self.create_tile_group(boss1_layout, 'boss1')
 
 		constraint_layout = import_csv_layout(level_data['constraints'])
 		self.constraint_sprites = self.create_tile_group(constraint_layout, 'constraints')
@@ -119,6 +121,8 @@ class Level:
 						sprite = Enemy3(tile_size, x, y)
 					if type == 'enemies4':
 						sprite = Enemy4(tile_size, x, y)
+					if type == 'boss1':
+						sprite = Boss1(tile_size, x, y)
 
 					if type == 'constraints':
 						sprite = Tile(tile_size, x, y)					
@@ -170,6 +174,11 @@ class Level:
 
 	def enemy_collision_reverse4(self):
 		for enemy in self.enemy4_sprites.sprites():
+			if pygame.sprite.spritecollide(enemy, self.constraint_sprites, False):
+				enemy.reverse()
+
+	def boss_collision_reverse5(self):
+		for enemy in self.boss1_sprites.sprites():
 			if pygame.sprite.spritecollide(enemy, self.constraint_sprites, False):
 				enemy.reverse()												
 
@@ -268,7 +277,7 @@ class Level:
 				player_bottom = self.player.sprite.rect.bottom
 				if enemy_top < player_bottom < enemy_center and self.player.sprite.direction.y >= 0:
 					self.player.sprite.direction.y = -15
-					death_sprite = Death2(enemy.rect.midbottom, 'death1')
+					death_sprite = Death(enemy.rect.midbottom, 'death1')
 					self.death_sprites.add(death_sprite)					
 					enemy.kill()
 				else:
@@ -284,7 +293,7 @@ class Level:
 				player_bottom = self.player.sprite.rect.bottom
 				if enemy1_top < player_bottom < enemy1_center and self.player.sprite.direction.y >= 0:
 					self.player.sprite.direction.y = -15
-					death_sprite = Death2(enemy1.rect.midbottom, 'death2')
+					death_sprite = Death(enemy1.rect.midbottom, 'death2')
 					self.death_sprites.add(death_sprite)
 					enemy1.kill()
 				else:
@@ -332,9 +341,25 @@ class Level:
 				player_bottom = self.player.sprite.rect.bottom
 				if enemy4_top < player_bottom < enemy4_center and self.player.sprite.direction.y >= 0:
 					self.player.sprite.direction.y = -15
-					death_sprite = Death2(enemy4.rect.midbottom, 'death4')
+					death_sprite = Death(enemy4.rect.midbottom, 'death5')
 					self.death_sprites.add(death_sprite)
 					enemy4.kill()
+				else:
+					self.player.sprite.get_damage()
+
+	def check_boss1_collisions(self):
+		boss1_collisions = pygame.sprite.spritecollide(self.player.sprite, self.boss1_sprites, False)
+
+		if boss1_collisions:
+			for boss1 in boss1_collisions:
+				boss1_center = boss1.rect.centery
+				boss1_top = boss1.rect.top
+				player_bottom = self.player.sprite.rect.bottom
+				if boss1_top < player_bottom < boss1_center and self.player.sprite.direction.y >= 0:
+					self.player.sprite.direction.y = -15
+					death_sprite = Death2(boss1.rect.midbottom, 'death6')
+					self.death_sprites.add(death_sprite)
+					boss1.kill()
 				else:
 					self.player.sprite.get_damage()
 
@@ -372,6 +397,8 @@ class Level:
 		self.enemy3_sprites.draw(self.display_surface)
 		self.enemy4_sprites.update(self.world_shift)
 		self.enemy4_sprites.draw(self.display_surface)
+		self.boss1_sprites.update(self.world_shift)
+		self.boss1_sprites.draw(self.display_surface)
 
 		self.constraint_sprites.update(self.world_shift)
 		self.enemy_collision_reverse()
@@ -406,6 +433,7 @@ class Level:
 		self.check_enemy2_collisions()
 		self.check_enemy3_collisions()
 		self.check_enemy4_collisions()
+		self.check_boss1_collisions()
 
 		self.lava.draw(self.display_surface, self.world_shift)
 

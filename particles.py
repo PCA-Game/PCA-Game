@@ -37,7 +37,11 @@ class Death(pygame.sprite.Sprite):
 		if type == 'death3':
 			self.frames = import_folder('assets/levels/enemies/husky/death')
 		if type == 'death4':
-			self.frames = import_folder('assets/levels/enemies/dark_goblin/death')		
+			self.frames = import_folder('assets/levels/enemies/dark_goblin/death')
+		if type == 'death5':
+			self.frames = import_folder('assets/levels/enemies/mage/death')
+		if type == 'death6':
+			self.frames = import_folder('assets/levels/enemies/mageboss/death')		
 		self.image = self.frames[self.frame_index]
 		self.rect = self.image.get_rect(center = pos)
 
@@ -64,7 +68,11 @@ class Death2(pygame.sprite.Sprite):
 		if type == 'death3':
 			self.frames = import_folder('assets/levels/enemies/husky/death')
 		if type == 'death4':
-			self.frames = import_folder('assets/levels/enemies/dark_goblin/death')		
+			self.frames = import_folder('assets/levels/enemies/dark_goblin/death')
+		if type == 'death5':
+			self.frames = import_folder('assets/levels/enemies/mage/death')
+		if type == 'death6':
+			self.frames = import_folder('assets/levels/enemies/mageboss/death')		
 		self.image = self.frames[self.frame_index]
 		self.rect = self.image.get_rect(center = pos)
 

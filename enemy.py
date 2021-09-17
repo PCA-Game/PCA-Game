@@ -65,6 +65,8 @@ class Enemy2(AnimatedTile):
 	def update(self, shift):
 		self.rect.x += shift
 		self.animate()
+		self.move()	
+		self.reverse_image()
 
 class Enemy3(AnimatedTile):
 	def __init__(self, size, x, y):
@@ -109,4 +111,13 @@ class Enemy4(AnimatedTile):
 		self.rect.x += shift
 		self.animate()
 		self.move()	
-		self.reverse_image()	
+		self.reverse_image()
+
+class Boss1(AnimatedTile):
+	def __init__(self, size, x, y):
+		super().__init__(size, x, y, 'assets/levels/enemies/mageboss/idle')
+		self.rect.y += size - self.image.get_size()[1]
+
+	def update(self, shift):
+		self.rect.x += shift
+		self.animate()
