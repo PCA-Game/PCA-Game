@@ -13,13 +13,7 @@ class Tile(pygame.sprite.Sprite):
 class StaticTile(Tile):
 	def __init__(self, size, x, y, surface):
 		super().__init__(size,x,y)
-		self.image = surface
-
-class Crate(StaticTile):
-	def __init__(self,size,x,y):
-		super().__init__(size,x,y,pygame.image.load('assets/levels/graphics/terrain/crate.png').convert_alpha())
-		offset_y = y + size
-		self.rect = self.image.get_rect(bottomleft = (x,offset_y))		
+		self.image = surface	
 
 class AnimatedTile(Tile):
 	def __init__(self, size, x, y, path):

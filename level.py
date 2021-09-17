@@ -1,8 +1,8 @@
 import pygame
 from support import import_csv_layout, import_cut_graphics
 from settings import tile_size, screen_height, screen_width
-from tiles import Tile, StaticTile, Crate, AnimatedTile, Flag, Trees
-from enemy import Enemy, Enemy1, Enemy2, Enemy3
+from tiles import Tile, StaticTile, AnimatedTile, Flag, Trees
+from enemy import Enemy, Enemy1, Enemy2, Enemy3, Enemy4
 from decorations import Lava
 from player import Player
 from particles import ParticleEffect, Death, Death2
@@ -61,10 +61,9 @@ class Level:
 		enemy2_layout = import_csv_layout(level_data['enemies2'])
 		self.enemy2_sprites = self.create_tile_group(enemy2_layout, 'enemies2')
 		enemy3_layout = import_csv_layout(level_data['enemies3'])
-		self.enemy3_sprites = self.create_tile_group(enemy3_layout, 'enemies3')		
-
-		crate_layout = import_csv_layout(level_data['crates'])
-		self.crate_sprites = self.create_tile_group(crate_layout,'crates')
+		self.enemy3_sprites = self.create_tile_group(enemy3_layout, 'enemies3')
+		enemy4_layout = import_csv_layout(level_data['enemies4'])
+		self.enemy4_sprites = self.create_tile_group(enemy4_layout, 'enemies4')
 
 		constraint_layout = import_csv_layout(level_data['constraints'])
 		self.constraint_sprites = self.create_tile_group(constraint_layout, 'constraints')
@@ -95,9 +94,6 @@ class Level:
 						tile_surface = grass1_tile_list[int(val)]
 						sprite = StaticTile(tile_size, x, y, tile_surface)
 
-					if type == 'crates':
-						sprite = Crate(tile_size,x,y)
-
 					if type == 'coins':
 						sprite = AnimatedTile(tile_size, x, y, 'assets/levels/graphics/coins')
 
@@ -121,6 +117,8 @@ class Level:
 						sprite = Enemy2(tile_size, x, y)
 					if type == 'enemies3':
 						sprite = Enemy3(tile_size, x, y)
+					if type == 'enemies4':
+						sprite = Enemy4(tile_size, x, y)
 
 					if type == 'constraints':
 						sprite = Tile(tile_size, x, y)					
@@ -167,6 +165,11 @@ class Level:
 
 	def enemy_collision_reverse3(self):
 		for enemy in self.enemy3_sprites.sprites():
+			if pygame.sprite.spritecollide(enemy, self.constraint_sprites, False):
+				enemy.reverse()
+
+	def enemy_collision_reverse4(self):
+		for enemy in self.enemy4_sprites.sprites():
 			if pygame.sprite.spritecollide(enemy, self.constraint_sprites, False):
 				enemy.reverse()												
 
@@ -319,10 +322,23 @@ class Level:
 				else:
 					self.player.sprite.get_damage()
 
-	def run(self):
-		self.crate_sprites.update(self.world_shift)
-		self.crate_sprites.draw(self.display_surface)
-		
+	def check_enemy4_collisions(self):
+		enemy4_collisions = pygame.sprite.spritecollide(self.player.sprite, self.enemy4_sprites, False)
+
+		if enemy4_collisions:
+			for enemy4 in enemy4_collisions:
+				enemy4_center = enemy4.rect.centery
+				enemy4_top = enemy4.rect.top
+				player_bottom = self.player.sprite.rect.bottom
+				if enemy4_top < player_bottom < enemy4_center and self.player.sprite.direction.y >= 0:
+					self.player.sprite.direction.y = -15
+					death_sprite = Death2(enemy4.rect.midbottom, 'death4')
+					self.death_sprites.add(death_sprite)
+					enemy4.kill()
+				else:
+					self.player.sprite.get_damage()
+
+	def run(self):	
 		self.terrain_sprites.update(self.world_shift)
 		self.terrain_sprites.draw(self.display_surface)
 
@@ -354,12 +370,15 @@ class Level:
 		self.enemy2_sprites.draw(self.display_surface)
 		self.enemy3_sprites.update(self.world_shift)
 		self.enemy3_sprites.draw(self.display_surface)
+		self.enemy4_sprites.update(self.world_shift)
+		self.enemy4_sprites.draw(self.display_surface)
 
 		self.constraint_sprites.update(self.world_shift)
 		self.enemy_collision_reverse()
 		self.enemy_collision_reverse1()
 		self.enemy_collision_reverse2()
 		self.enemy_collision_reverse3()
+		self.enemy_collision_reverse4()
 		self.death_sprites.update(self.world_shift)
 		self.death_sprites.draw(self.display_surface)
 
@@ -386,6 +405,7 @@ class Level:
 		self.check_enemy1_collisions()
 		self.check_enemy2_collisions()
 		self.check_enemy3_collisions()
+		self.check_enemy4_collisions()
 
 		self.lava.draw(self.display_surface, self.world_shift)
 
