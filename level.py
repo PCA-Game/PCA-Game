@@ -9,7 +9,7 @@ from particles import ParticleEffect, Death, Death2
 from game_data import levels
 
 class Level:
-	def __init__(self, current_level, surface, create_overworld, change_coins, change_health):
+	def __init__(self, current_level, surface, create_overworld, change_health):
 		self.display_surface = surface
 		self.world_shift = 0
 		self.current_x = None
@@ -23,8 +23,6 @@ class Level:
 		self.player = pygame.sprite.GroupSingle()
 		self.goal = pygame.sprite.GroupSingle()
 		self.player_setup(player_layout, change_health)
-
-		self.change_coins = change_coins
 
 		self.dust_sprite = pygame.sprite.GroupSingle()
 		self.player_on_ground = False
@@ -47,9 +45,6 @@ class Level:
 		self.grass_sprites = self.create_tile_group(grass_layout, 'grass')
 		grass1_layout = import_csv_layout(level_data['grass1'])
 		self.grass1_sprites = self.create_tile_group(grass1_layout, 'grass1')
-
-		coin_layout = import_csv_layout(level_data['coins'])
-		self.coin_sprites = self.create_tile_group(coin_layout, 'coins')
 
 		fg_flag_layout = import_csv_layout(level_data['flag'])
 		self.fg_flag_sprites = self.create_tile_group(fg_flag_layout, 'flag')
@@ -95,9 +90,6 @@ class Level:
 						grass1_tile_list = import_cut_graphics('assets/levels/graphics/decoration/grass/4.png')
 						tile_surface = grass1_tile_list[int(val)]
 						sprite = StaticTile(tile_size, x, y, tile_surface)
-
-					if type == 'coins':
-						sprite = AnimatedTile(tile_size, x, y, 'assets/levels/graphics/coins')
 
 					if type == 'flag':
 						sprite = Flag(tile_size, x, y, 'assets/levels/graphics/terrain/flag', 32)
@@ -252,12 +244,6 @@ class Level:
 		if pygame.sprite.spritecollide(self.player.sprite, self.goal, False):
 			self.create_overworld(self.current_level, self.new_max_level)			
 
-	def check_coin_collisions(self):
-		collided_coins = pygame.sprite.spritecollide(self.player.sprite, self.coin_sprites, True)
-		if collided_coins:
-			for coin in collided_coins:
-				self.change_coins(1)
-
 	def check_enemy_collisions(self):
 		enemy_collisions = pygame.sprite.spritecollide(self.player.sprite, self.enemy_sprites, False)
 
@@ -375,9 +361,6 @@ class Level:
 		self.grass1_sprites.update(self.world_shift)
 		self.grass1_sprites.draw(self.display_surface)
 
-		self.coin_sprites.update(self.world_shift)
-		self.coin_sprites.draw(self.display_surface)
-
 		self.fg_flag_sprites.update(self.world_shift)
 		self.fg_flag_sprites.draw(self.display_surface)
 
@@ -418,7 +401,6 @@ class Level:
 		self.check_death()
 		self.check_win()
 
-		self.check_coin_collisions()
 		self.check_enemy_collisions()
 		self.check_enemy1_collisions()
 		self.check_enemy2_collisions()

@@ -1,6 +1,5 @@
 level_0 = {
 	'terrain': 'assets/levels/level_data/0/level_0_terrain.csv',
-	'coins': 'assets/levels/level_data/0/level_0_coins.csv',
 	'constraints': 'assets/levels/level_data/0/level_0_constraints.csv',
 	'enemies': 'assets/levels/level_data/0/level_0_enemies.csv',
 	'enemies1': 'assets/levels/level_data/0/level_0_enemies1.csv',
@@ -38,7 +37,6 @@ level_1 = {
 	'enemies4': 'assets/levels/level_data/1/level1_enemies4.csv',
 	'boss1': 'assets/levels/level_data/0/level_0_boss1.csv',
 	'constraints': 'assets/levels/level_data/1/level1_constraints.csv',
-	'coins': 'assets/levels/level_data/1/level1_coin.csv',
 	'node_pos': (310,170),
 	'unlock': 2,
 	'node_graphics': 'assets/levels/overworld/1'
@@ -61,7 +59,6 @@ level_2 = {
 	'enemies4': 'assets/levels/level_data/2/level2_enemies4.csv',
 	'boss1': 'assets/levels/level_data/0/level_0_boss1.csv',
 	'constraints': 'assets/levels/level_data/2/level2_constraints.csv',
-	'coins': 'assets/levels/level_data/2/level2_coin.csv',
 	'node_pos': (490,560),
 	'unlock': 3,
 	'node_graphics': 'assets/levels/overworld/2'
@@ -84,7 +81,6 @@ level_3 = {
 	'enemies4': 'assets/levels/level_data/3/level3_enemies4.csv',
 	'boss1': 'assets/levels/level_data/0/level_0_boss1.csv',
 	'constraints': 'assets/levels/level_data/3/level3_constraints.csv',
-	'coins': 'assets/levels/level_data/3/level3_coin.csv',
 	'node_pos': (620,300),
 	'unlock': 4,
 	'node_graphics': 'assets/levels/overworld/3'
@@ -107,7 +103,6 @@ level_4 = {
 	'enemies4': 'assets/levels/level_data/4/level4_enemies4.csv',
 	'boss1': 'assets/levels/level_data/4/level4_boss1.csv',
 	'constraints': 'assets/levels/level_data/4/level4_constraints.csv',
-	'coins': 'assets/levels/level_data/4/level4_coin.csv',
 	'node_pos': (890,160),
 	'unlock': 5,
 	'node_graphics': 'assets/levels/overworld/4'
