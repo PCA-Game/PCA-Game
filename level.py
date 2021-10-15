@@ -184,43 +184,34 @@ class Level:
 
 	def horizontal_movement_collision(self):
 		player = self.player.sprite
-		player.rect.x += player.direction.x * player.speed
+		player.collision_rect.x += player.direction.x * player.speed
 
 		for sprite in self.terrain_sprites.sprites():
-			if sprite.rect.colliderect(player.rect):
+			if sprite.rect.colliderect(player.collision_rect):
 				if player.direction.x < 0: 
-					player.rect.left = sprite.rect.right
+					player.collision_rect.left = sprite.rect.right
 					player.on_left = True
-					self.current_x = player.rect.left
 				elif player.direction.x > 0:
-					player.rect.right = sprite.rect.left
+					player.collision_rect.right = sprite.rect.left
 					player.on_right = True
-					self.current_x = player.rect.right
-
-		if player.on_left and (player.rect.left < self.current_x or player.direction.x >= 0):
-			player.on_left = False
-		if player.on_right and (player.rect.right > self.current_x or player.direction.x <= 0):
-			player.on_right = False
 
 	def vertical_movement_collision(self):
 		player = self.player.sprite
 		player.apply_gravity()
 
 		for sprite in self.terrain_sprites.sprites():
-			if sprite.rect.colliderect(player.rect):
+			if sprite.rect.colliderect(player.collision_rect):
 				if player.direction.y > 0: 
-					player.rect.bottom = sprite.rect.top
+					player.collision_rect.bottom = sprite.rect.top
 					player.direction.y = 0
 					player.on_ground = True
 				elif player.direction.y < 0:
-					player.rect.top = sprite.rect.bottom
+					player.collision_rect.top = sprite.rect.bottom
 					player.direction.y = 0
 					player.on_ceiling = True
 
 		if player.on_ground and player.direction.y < 0 or player.direction.y > 1:
-			player.on_ground = False
-		if player.on_ceiling and player.direction.y > 0.1:
-			player.on_ceiling = False				
+			player.on_ground = False			
 
 	def scroll_x(self):
 		player = self.player.sprite
@@ -363,7 +354,10 @@ class Level:
 				else:
 					self.player.sprite.get_damage()
 
-	def run(self):	
+	def run(self):
+		self.dust_sprite.update(self.world_shift)
+		self.dust_sprite.draw(self.display_surface)
+		
 		self.terrain_sprites.update(self.world_shift)
 		self.terrain_sprites.draw(self.display_surface)
 
@@ -408,9 +402,6 @@ class Level:
 		self.enemy_collision_reverse4()
 		self.death_sprites.update(self.world_shift)
 		self.death_sprites.draw(self.display_surface)
-
-		self.dust_sprite.update(self.world_shift)
-		self.dust_sprite.draw(self.display_surface)
 
 		self.player.update()
 		self.horizontal_movement_collision()
