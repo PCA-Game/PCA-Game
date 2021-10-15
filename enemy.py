@@ -28,7 +28,7 @@ class Enemy1(AnimatedTile):
 	def __init__(self, size, x, y):
 		super().__init__(size, x, y, 'assets/levels/enemies/hellbound/run')
 		self.rect.y += size - self.image.get_size()[1]
-		self.speed = randint(3,3)
+		self.speed = randint(2,4)
 
 	def move(self):
 		self.rect.x += self.speed
@@ -50,7 +50,7 @@ class Enemy2(AnimatedTile):
 	def __init__(self, size, x, y):
 		super().__init__(size, x, y, 'assets/levels/enemies/husky/run')
 		self.rect.y += size - self.image.get_size()[1]
-		self.speed = randint(1,1)
+		self.speed = randint(1,2)
 
 	def move(self):
 		self.rect.x += self.speed

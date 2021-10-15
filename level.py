@@ -14,6 +14,11 @@ class Level:
 		self.world_shift = 0
 		self.current_x = None
 
+		self.stomp_sound = pygame.mixer.Sound('assets/music/enemy.wav')
+		self.stompboss_sound = pygame.mixer.Sound('assets/music/boss.wav')
+		self.endlevel_sound = pygame.mixer.Sound('assets/music/end_level.wav')
+		self.endlevel_sound.set_volume(0.5)
+
 		self.create_overworld = create_overworld
 		self.current_level = current_level
 		level_data = levels[self.current_level]
@@ -242,6 +247,7 @@ class Level:
 			
 	def check_win(self):
 		if pygame.sprite.spritecollide(self.player.sprite, self.goal, False):
+			self.endlevel_sound.play()
 			self.create_overworld(self.current_level, self.new_max_level)			
 
 	def check_enemy_collisions(self):
@@ -253,6 +259,7 @@ class Level:
 				enemy_top = enemy.rect.top
 				player_bottom = self.player.sprite.rect.bottom
 				if enemy_top < player_bottom < enemy_center and self.player.sprite.direction.y >= 0:
+					self.stomp_sound.play()
 					self.player.sprite.direction.y = -15
 					death_sprite = Death(enemy.rect.midbottom, 'death1')
 					self.death_sprites.add(death_sprite)					
@@ -269,6 +276,7 @@ class Level:
 				enemy1_top = enemy1.rect.top
 				player_bottom = self.player.sprite.rect.bottom
 				if enemy1_top < player_bottom < enemy1_center and self.player.sprite.direction.y >= 0:
+					self.stomp_sound.play()
 					self.player.sprite.direction.y = -15
 					death_sprite = Death(enemy1.rect.midbottom, 'death2')
 					self.death_sprites.add(death_sprite)
@@ -285,6 +293,7 @@ class Level:
 				enemy2_top = enemy2.rect.top
 				player_bottom = self.player.sprite.rect.bottom
 				if enemy2_top < player_bottom < enemy2_center and self.player.sprite.direction.y >= 0:
+					self.stomp_sound.play()
 					self.player.sprite.direction.y = -15
 					death_sprite = Death(enemy2.rect.midbottom, 'death3')
 					self.death_sprites.add(death_sprite)
@@ -301,6 +310,7 @@ class Level:
 				enemy3_top = enemy3.rect.top
 				player_bottom = self.player.sprite.rect.bottom
 				if enemy3_top < player_bottom < enemy3_center and self.player.sprite.direction.y >= 0:
+					self.stomp_sound.play()
 					self.player.sprite.direction.y = -15
 					death_sprite = Death2(enemy3.rect.midbottom, 'death4')
 					self.death_sprites.add(death_sprite)
@@ -317,6 +327,7 @@ class Level:
 				enemy4_top = enemy4.rect.top
 				player_bottom = self.player.sprite.rect.bottom
 				if enemy4_top < player_bottom < enemy4_center and self.player.sprite.direction.y >= 0:
+					self.stomp_sound.play()
 					self.player.sprite.direction.y = -15
 					death_sprite = Death(enemy4.rect.midbottom, 'death5')
 					self.death_sprites.add(death_sprite)
@@ -333,6 +344,7 @@ class Level:
 				boss1_top = boss1.rect.top
 				player_bottom = self.player.sprite.rect.bottom
 				if boss1_top < player_bottom < boss1_center and self.player.sprite.direction.y >= 0:
+					self.stompboss_sound.play()
 					self.player.sprite.direction.y = -15
 					death_sprite = Death2(boss1.rect.midbottom, 'death6')
 					self.death_sprites.add(death_sprite)

@@ -8,7 +8,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.import_character_assets()
         self.frame_index = 0
-        self.animation_speed = 0.03
+        self.animation_speed = 0.06
         self.image = self.animations['idle'][self.frame_index]
         self.rect = self.image.get_rect(topleft=pos)
         self.attacking = False
@@ -37,6 +37,9 @@ class Player(pygame.sprite.Sprite):
         self.invicible = False
         self.invicibility_duration = 800
         self.hurt_time = 0
+
+        self.jump_sound = pygame.mixer.Sound('assets/music/jump.wav')
+        self.hit_sound = pygame.mixer.Sound('assets/music/hit.wav')
 
     def import_character_assets(self):
         character_path = 'assets/characters/'
@@ -122,9 +125,11 @@ class Player(pygame.sprite.Sprite):
 
     def jump(self):
         self.direction.y = self.jump_speed
+        self.jump_sound.play()
 
     def get_damage(self):
         if not self.invicible:
+            self.hit_sound.play()
             self.change_health(-7.5)
             self.invicible = True
             self.hurt_time = pygame.time.get_ticks()
