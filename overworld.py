@@ -53,14 +53,14 @@ class Overworld:
 
 		self.moving = False
 		self.move_direction = pygame.math.Vector2(0,0)
-		self.speed = 8
+		self.speed = 7
 
 		self.setup_nodes()
 		self.setup_icon()
 
 		self.start_time = pygame.time.get_ticks()
 		self.allow_input = False
-		self.timer_length = 300
+		self.timer_length = 200
 
 	def setup_nodes(self):
 		self.nodes = pygame.sprite.Group()
@@ -75,7 +75,7 @@ class Overworld:
 	def draw_paths(self):
 		if self.max_level > 0:
 			points = [node['node_pos'] for index, node in enumerate(levels.values()) if index <= self.max_level]
-			pygame.draw.lines(self.display_surface, '#640709', False, points, 6)			
+			pygame.draw.lines(self.display_surface, '#640709', False, points, 5)			
 
 	def setup_icon(self):
 		self.icon = pygame.sprite.GroupSingle()

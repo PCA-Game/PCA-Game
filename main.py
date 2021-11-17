@@ -9,7 +9,7 @@ from ui import UI
 
 class Game:
     def __init__(self):
-        self.max_level = 5
+        self.max_level = 0
         self.max_health = 300
         self.cur_health = 300
 
