@@ -75,6 +75,10 @@ while True:
             pygame.quit()
             sys.exit()
 
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_ESCAPE:
+            quit()
+
     screen.fill((0, 0, 0))
     screen.blit(background, (0, 0))
     game.run()
